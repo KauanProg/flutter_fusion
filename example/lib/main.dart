@@ -37,10 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FusionElevatedButton(texto: 'abc', onPressed: () {}),
-            FusionOutlinedButton(texto: 'abc', onPressed: () {}),
-            FusionFilledButton(texto: 'abc', onPressed: (){}),
-            FusionFilledTonalButton(texto: 'abc', onPressed: (){}),
+            FusionFilledButton(onPressed: (){}, child: const Text('data'))
           ],
         ),
       ),
