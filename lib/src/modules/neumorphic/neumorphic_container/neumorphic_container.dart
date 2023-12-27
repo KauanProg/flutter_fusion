@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable
-
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
@@ -8,13 +6,27 @@ class NeumorphicContainer extends StatefulWidget {
   final Widget child;
   final double width;
   final double height;
+  final Color? backgroundColorLight;
+  final Color? backgroundColorDark;
+  final Offset? pressedDistance;
+  final Offset? releasedDistance;
+  final double? blur;
+  final bool? isDarkMode;
+  final BorderRadiusGeometry? borderRadius;
 
-  NeumorphicContainer({
+  const NeumorphicContainer({
     super.key,
     required this.onPressed,
     required this.child,
     required this.width,
     required this.height,
+    this.backgroundColorLight,
+    this.backgroundColorDark,
+    this.pressedDistance,
+    this.releasedDistance,
+    this.blur,
+    this.isDarkMode,
+    this.borderRadius,
   });
 
   @override
@@ -27,9 +39,15 @@ class _NeumorphicContainerState extends State<NeumorphicContainer> {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor = isDarkMode ? const Color(0xff2e3239) : const Color(0xffe7ecef);
-    Offset distance = isPressed ? const Offset(5, 5) : const Offset(15, 15);
-    double blur = isPressed ? 3 : 15;
+    Color backgroundColor = isDarkMode
+        ? widget.backgroundColorDark ?? const Color(0xff2e3239)
+        : widget.backgroundColorLight ?? const Color(0xffe7ecef);
+    Offset distance = isPressed
+        ? widget.pressedDistance ?? const Offset(5, 5)
+        : widget.releasedDistance ?? const Offset(15, 15);
+    double blur = widget.blur != null
+        ? (isPressed ? widget.blur! : widget.blur! * 3)
+        : (isPressed ? 3 : 15);
 
     return GestureDetector(
       onTap: () => setState(() => isPressed = !isPressed),
@@ -39,7 +57,7 @@ class _NeumorphicContainerState extends State<NeumorphicContainer> {
         height: widget.height,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               blurRadius: blur,
@@ -57,9 +75,7 @@ class _NeumorphicContainerState extends State<NeumorphicContainer> {
             ),
           ],
         ),
-        child: Center(
-          child: widget.child,
-        ),
+        child: widget.child,
       ),
     );
   }
